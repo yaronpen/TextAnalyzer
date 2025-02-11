@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text Analyzer</title>
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet"> -->
+    <link href="/tailwind.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Auth Container -->
+        <div id="auth-container">
+            <div class="header">
+                <div class="logo">
+                    <img src="icon48.png" alt="Logo" class="logo-icon">
+                    <h1 class="text-xl font-semibold">Text Analyzer</h1>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <input type="text" id="email" placeholder="email" class="input-field">
+                <input type="password" id="password" placeholder="Password" class="input-field">
+            </div>
+            <div class="condition"><a href="https://analyzetext.info/terms">Terms and conditions, Privacy policy</a></div>
+            <button id="loginBtn" class="btn btn-primary mb-3">Sign In</button>
+            <button id="registerBtn" class="btn btn-secondary">Create Account</button>
+
+            <div class="mt-2 text-center">
+                <button id="forgotPasswordBtn" class="text-sm text-indigo-600 hover:text-indigo-800">
+                    Forgot Password?
+                </button>
+            </div>
+            
+            
+            <div id="error" class="error"></div>
+            
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <span>Please wait...</span>
+            </div>
+        </div>
+
+         <!-- Result Container -->
+        <div id="result-container">
+            <div class="header">
+                <div class="logo">
+                    <img src="icon48.png" alt="Logo" class="logo-icon">
+                    <h1 class="text-xl font-semibold">Text Analyzer</h1>
+                </div>
+                <button id="logoutBtn" class="btn-secondary px-3 py-1 rounded-md">
+                    Logout
+                </button>
+            </div>
+
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar"></div>
+                <span id="email-display" class="font-medium"></span>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Analysis Instructions
+                </label>
+                <textarea 
+                    id="instructions" 
+                    class="instructions-area" 
+                    placeholder="Enter instructions for analysis (e.g., 'Check if this statement is true', 'Analyze the tone')"></textarea>
+                <div id="saveStatus" class="save-status"></div>
+            </div>
+            <div class="text-sm text-gray-600 mb-4">
+                Select text on any webpage and right-click to analyze it.
+            </div>
+            <div>
+                <div id="result" class="result-box">
+                    No analysis yet. Select some text to get started.
+                </div>
+                <div>
+                    <button id="copyClipboard" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Copy Text</button>
+                    <span id="clipBoardMsg"></span>
+                </div>
+            </div>
+        </div>
+
+        <div id="reset-password-container">
+            <div class="mb-6">
+                <input type="email" id="resetEmail" placeholder="Enter your email" class="input-field">
+            </div>
+            <button id="sendResetLinkBtn" class="btn btn-primary mb-3">Send Reset Link</button>
+            <button id="backToLoginBtn" class="btn btn-secondary">Back to Login</button>
+        </div>
+    </div>
+    <script src="/purify.min.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>
