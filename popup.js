@@ -19,8 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('authForm');
     const apiUrl = 'https://analyzetext.info';
 
-    let isWaitingForAnalysis = false;
-
     let saveTimeout = null;
 
     let isOnline = navigator.onLine;
@@ -374,30 +372,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // chrome.runtime.onMessage.addListener((message) => {
-    //     // First check if we're already authenticated
-    //     chrome.storage.local.get(['token', 'email'], function(result) {
-    //         if (result.token) {
-    //             showResultContainer(result.email);
-                
-    //             // Now handle the message
-    //             if (message.type === 'ANALYSIS_START') {
-    //                 const resultDiv = document.getElementById('result');
-    //                 resultDiv.innerHTML = `<div class="text-gray-800"></div>`;
-    //             } else if (message.type === 'ANALYSIS_RESULT') {
-    //                 const resultDiv = document.getElementById('result');
-                    
-    //                 resultDiv.innerHTML = `<div class="text-gray-800">${message.payload}</div>`;
-    //                 chrome.storage.local.set({ lastAnalysisResult: message.payload });
-    //             } else if (message.type === 'ANALYSIS_ERROR') {
-    //                 const resultDiv = document.getElementById('result');
-    //                 resultDiv.innerHTML = `<div class="text-red-600">Error: ${message.payload}</div>`;
-    //                 chrome.storage.local.set({ lastAnalysisResult: message.payload });
-    //             }
-    //         }
-    //     });
-    // });
-    // let isWaitingForAnalysis = false;
     chrome.storage.local.get(['token', 'email'], function(result) {
         if (result.token) {
             verifyToken(result.token, result.email);
