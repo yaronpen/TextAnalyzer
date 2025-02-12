@@ -18,15 +18,15 @@
                     <h1 class="text-xl font-semibold">Text Analyzer</h1>
                 </div>
             </div>
-
-            <div class="mb-6">
-                <input type="text" id="email" placeholder="email" class="input-field">
-                <input type="password" id="password" placeholder="Password" class="input-field">
-            </div>
-            <div class="condition"><a href="https://analyzetext.info/terms">Terms and conditions, Privacy policy</a></div>
-            <button id="loginBtn" class="btn btn-primary mb-3">Sign In</button>
-            <button id="registerBtn" class="btn btn-secondary">Create Account</button>
-
+            <form id="authForm" class="mb-6">
+                <div class="mb-6">
+                    <input type="text" id="email" placeholder="email" class="input-field"  autocomplete="email">
+                    <input type="password" id="password" placeholder="Password" class="input-field" autocomplete="current-password">
+                </div>
+                <div class="condition"><a href="https://analyzetext.info/terms">Terms and conditions, Privacy policy</a></div>
+                <button id="signInBtn" type="submit" class="btn btn-primary mb-3">Sign In</button>
+                <button id="registerBtn" type="button" class="btn btn-secondary">Create Account</button>
+            </form>
             <div class="mt-2 text-center">
                 <button id="forgotPasswordBtn" class="text-sm text-indigo-600 hover:text-indigo-800">
                     Forgot Password?

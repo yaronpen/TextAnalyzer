@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ... (existing variable declarations) ...
     const authContainer = document.getElementById('auth-container');
     const resultContainer = document.getElementById('result-container');
-    const loginBtn = document.getElementById('loginBtn');
+    const loginBtn = document.getElementById('signInBtn');
     const registerBtn = document.getElementById('registerBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const errorDiv = document.getElementById('error');
@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const backToLoginBtn = document.getElementById('backToLoginBtn');
     const networkStatus = document.createElement('div');
     const instructionsArea = document.getElementById('instructions');
+    const form = document.getElementById('authForm');
     const apiUrl = 'https://analyzetext.info';
 
     let isWaitingForAnalysis = false;
@@ -299,7 +300,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     // Enhanced login handling
-    loginBtn.addEventListener('click', async () => {
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
