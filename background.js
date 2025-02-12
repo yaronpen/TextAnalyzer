@@ -135,6 +135,13 @@ async function analyzeText(text, token, instructions, retryCount = 0) {
 
     try {
         checkRateLimit();
+        if(instructions === ''){
+            chrome.runtime.sendMessage({
+                type: 'ANALYSIS_ERROR',
+                payload: 'Please enter instructions'
+            });
+            return; 
+        }
 
         const response = await fetch(`${apiUrl}/generate`, {
             method: 'POST',
