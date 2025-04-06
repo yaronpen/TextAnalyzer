@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultContainer = document.getElementById('result-container');
     const loginBtn = document.getElementById('signInBtn');
     const registerBtn = document.getElementById('registerBtn');
+    const guestBtn = document.getElementById('guestBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const errorDiv = document.getElementById('error');
     const loadingDiv = document.getElementById('loading');
@@ -18,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const instructionsArea = document.getElementById('instructions');
     const form = document.getElementById('authForm');
     const apiUrl = 'https://analyzetext.info';
+
 
     let saveTimeout = null;
 
@@ -63,12 +65,14 @@ document.addEventListener('DOMContentLoaded', function() {
         loadingDiv.style.display = 'flex';
         loginBtn.disabled = true;
         registerBtn.disabled = true;
+        guestBtn.disabled = true;
     }
 
     function hideLoading() {
         loadingDiv.style.display = 'none';
         loginBtn.disabled = false;
         registerBtn.disabled = false;
+        guestBtn.disabled = false;
     }
 
     function showAuthContainer() {
@@ -84,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getInitials(email) {
-        return email.substring(0, 2).toUpperCase();
+        return typeof email == 'object' && email.length > 0 ? email.substring(0, 2).toUpperCase() : 'An';
     }
 
     copyClipboard.addEventListener('click', copyToClipboard);
@@ -204,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         const validation = validations[type];
-        console.log(input);
+        
         if (!validation.pattern.test(input)) {
             showError(validation.message);
             return false;
@@ -255,7 +259,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     chrome.storage.local.get(['instructions'], function(result) {
-        // console.log(result)
         if (result.instructions) {
             instructionsArea.value = result.instructions;
         }
@@ -273,7 +276,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Set new timeout for saving
         saveTimeout = setTimeout(() => {
             const instructions = instructionsArea.value.trim();
-            console.log(instructions);
             chrome.storage.local.set({ instructions }, function() {
                 showSavedStatus();
             });
@@ -321,6 +323,49 @@ document.addEventListener('DOMContentLoaded', function() {
             hideLoading();
         }
     });
+
+    guestBtn.addEventListener('click', async () => {
+        event.preventDefault();
+
+        showLoading();
+
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+            const response = await fetch(`${apiUrl}/token_create_guest`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                // body: `username=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
+                signal: controller.signal
+            });
+
+            clearTimeout(timeoutId);
+
+            const data = await response.json();
+            
+            if (response.ok) {
+                chrome.storage.local.set({ 
+                    token: data.access_token,
+                    email: email 
+                }, function() {
+                    showResultContainer('Guest User');
+                });
+            } else {
+                handleError(data.detail || 'Login failed');
+            }
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                handleError('Request timed out');
+            } else {
+                handleError('Connection error');
+            }
+        } finally {
+            hideLoading();
+        }
+    })
 
     
 
@@ -399,9 +444,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    chrome.storage.local.get(['token', 'email'], function(result) {
+    chrome.storage.local.get(['token'], function(result) {
+        const email = result.email || 'Guest User';
         if (result.token) {
-            verifyToken(result.token, result.email);
+            verifyToken(result.token, email);
 
         } else {
             showAuthContainer();
@@ -422,7 +468,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 showResultContainer(result.email);
                 
                 const resultDiv = document.getElementById('result');
-                console.log(message.type);
                 switch (message.type) {
                     case 'ANALYSIS_START':
                         resultDiv.innerHTML = `<div class="text-gray-800">Analyzing...</div>`;
@@ -430,7 +475,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         break;
                         
                     case 'ANALYSIS_RESULT':
-                        console.log(message.payload);
                         hideLoading();
                         // Validate and sanitize the response
                         const sanitizedResult = DOMPurify.sanitize(message.payload);
@@ -451,11 +495,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
-    // Add CSS for network status
-    // const style = document.createElement('style');
-    // style.textContent = `
-        
-    // `;
-    // document.head.appendChild(style);
 });
